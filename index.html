@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typing Speed Tester</title>
+  <meta name="description" content="Test your typing speed and accuracy in 30 or 60 seconds.">
+
+  <!-- Fonts (the page still works offline using the fallback fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <header class="header">
+      <h1>Typing speed test</h1>
+      <p id="subtitle">Start typing the passage below. The timer begins with your first keystroke.</p>
+    </header>
+
+    <!-- ========== TEST CARD ========== -->
+    <section class="card" id="testCard" aria-label="Typing test">
+
+      <!-- Time progress indicator -->
+      <div class="progress" id="progress" role="progressbar"
+           aria-label="Time elapsed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="toolbar">
+        <!-- Duration selector -->
+        <div class="segmented" role="group" aria-label="Test duration">
+          <button type="button" class="seg-btn" data-duration="30" aria-pressed="true">30 sec</button>
+          <button type="button" class="seg-btn" data-duration="60" aria-pressed="false">60 sec</button>
+        </div>
+
+        <!-- Live stats -->
+        <div class="live" aria-live="off">
+          <div class="live-item">
+            <span class="live-value" id="timeLeft">30</span>
+            <span class="live-label">seconds left</span>
+          </div>
+          <div class="live-item">
+            <span class="live-value" id="liveWpm">0</span>
+            <span class="live-label">WPM</span>
+          </div>
+          <div class="live-item">
+            <span class="live-value" id="liveAccuracy">–</span>
+            <span class="live-label">accuracy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passage the user has to type -->
+      <div class="passage" id="passage" aria-label="Passage to type"></div>
+
+      <!-- Where the user types -->
+      <label class="visually-hidden" for="typingInput">Type the passage here</label>
+      <textarea id="typingInput" class="input" rows="3"
+                placeholder="Click here and start typing…"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="restartBtn">Restart</button>
+        <span class="hint">Press <kbd>Esc</kbd> to restart at any time</span>
+      </div>
+    </section>
+
+    <!-- ========== RESULTS DASHBOARD ========== -->
+    <section class="card results" id="results" aria-label="Test results" aria-live="polite" hidden>
+      <div class="results-top">
+        <div class="results-main">
+          <p class="results-kicker">Your speed</p>
+          <p class="big"><span id="resWpm">0</span><small>WPM</small></p>
+          <p class="verdict" id="verdict"></p>
+        </div>
+
+        <div class="ring" id="ring" style="--pct:0">
+          <div class="ring-inner">
+            <span class="ring-value" id="resAccuracy">0%</span>
+            <span class="ring-label">accuracy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tiles">
+        <div class="tile"><span class="tile-value good" id="resCorrect">0</span><span class="tile-label">Correct characters</span></div>
+        <div class="tile"><span class="tile-value bad" id="resIncorrect">0</span><span class="tile-label">Incorrect characters</span></div>
+        <div class="tile"><span class="tile-value" id="resTotal">0</span><span class="tile-label">Total typed</span></div>
+        <div class="tile"><span class="tile-value" id="resDuration">0s</span><span class="tile-label">Test length</span></div>
+      </div>
+
+      <p class="formula">
+        WPM = correct characters ÷ 5 ÷ minutes &nbsp;•&nbsp;
+        Accuracy = correct ÷ total typed × 100
+      </p>
+
+      <button type="button" class="btn btn-primary" id="tryAgainBtn">Try again</button>
+    </section>
+
+  </main>
+
+  <!-- ========== WELCOME POP-UP ========== -->
+  <div class="modal-backdrop" id="welcomeModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Welcome">
+
+      <!-- Step 1: ask for the name -->
+      <div id="stepName">
+        <h2>Welcome! What's your name?</h2>
+        <p>We'll use it to personalise your typing test.</p>
+        <form id="nameForm" novalidate>
+          <label class="visually-hidden" for="nameInput">Your name</label>
+          <input id="nameInput" class="name-input" type="text" maxlength="24"
+                 placeholder="Enter your name" autocomplete="given-name">
+          <p class="form-error" id="nameError" hidden>Please enter your name to continue.</p>
+          <button type="submit" class="btn btn-primary btn-block">Continue</button>
+        </form>
+      </div>
+
+      <!-- Step 2: greet the user by name -->
+      <div id="stepWelcome" hidden>
+        <h2 id="welcomeTitle"></h2>
+        <p>Pick 30 or 60 seconds, then start typing. The timer begins with your first keystroke.</p>
+        <button type="button" class="btn btn-primary btn-block" id="startBtn">Start typing</button>
+        <button type="button" class="link-btn" id="changeNameBtn">Not you? Change name</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
